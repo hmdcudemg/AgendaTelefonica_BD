@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,24 @@ namespace AgendaTelefonica_BD
         public Form1()
         {
             InitializeComponent();
+            cargarAgenda();
+        }
+
+        private void cargarAgenda()
+        {
+            ConexionMySQL conexion = new ConexionMySQL();
+            try
+            {
+                string Query = "SELECT id,nombre,telefono,direccion FROM agenda";
+                MySqlDataAdapter adapter = conexion.conexionUpdate(Query);
+                DataSet datos = new DataSet();
+                adapter.Fill(datos);
+                conexion.conexionClose();
+                dataGridView1.DataSource = datos;
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
