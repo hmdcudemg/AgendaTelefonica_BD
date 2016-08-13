@@ -24,12 +24,22 @@ namespace AgendaTelefonica_BD
             ConexionMySQL conexion = new ConexionMySQL();
             try
             {
-                string Query = "SELECT id,nombre,telefono,direccion FROM agenda";
+                string Query = "SELECT * FROM agenda";
                 MySqlDataAdapter adapter = conexion.conexionUpdate(Query);
-                DataSet datos = new DataSet();
-                adapter.Fill(datos);
-                conexion.conexionClose();
+                DataTable datos = new DataTable();
+                adapter.Fill(datos);                                         
                 dataGridView1.DataSource = datos;
+                conexion.conexionClose();
+
+                dataGridView1.Columns[0].HeaderText = "Id";
+                dataGridView1.Columns[1].HeaderText = "Nombre";
+                dataGridView1.Columns[2].HeaderText = "Telefono";
+                dataGridView1.Columns[3].HeaderText = "Direccion";
+
+                dataGridView1.Columns[0].Width = 50;
+                dataGridView1.Columns[1].Width = 200;
+                dataGridView1.Columns[2].Width = 100;
+                dataGridView1.Columns[3].Width = 250;
             }
             catch (Exception ex)
             {
