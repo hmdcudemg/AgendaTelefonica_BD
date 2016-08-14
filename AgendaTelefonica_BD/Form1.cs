@@ -50,25 +50,33 @@ namespace AgendaTelefonica_BD
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ConexionMySQL conexion = new ConexionMySQL();
-            try
+            if (txtNombre.TextLength != 0 && txtTelefono.TextLength != 0 && txtTelefono.TextLength == 10 && txtDireccion.TextLength != 0)
             {
-                string Query = "INSERT INTO agenda(nombre,telefono,direccion) VALUES(\"" + txtNombre.Text.ToString() + "\",\"" + txtTelefono.Text.Trim().ToString() + "\",\"" + txtDireccion.Text.ToString() + "\");";
-                MySqlDataReader adapter = conexion.conexionSendData(Query);
-                while (adapter.Read())
+                ConexionMySQL conexion = new ConexionMySQL();
+                try
                 {
+                    string Query = "INSERT INTO agenda(nombre,telefono,direccion) VALUES(\"" + txtNombre.Text.ToString() + "\",\"" + txtTelefono.Text.Trim().ToString() + "\",\"" + txtDireccion.Text.ToString() + "\");";
+                    MySqlDataReader adapter = conexion.conexionSendData(Query);
+                    while (adapter.Read())
+                    {
+                    }
+                    conexion.conexionClose();
                 }
-                conexion.conexionClose();
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al Agregar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                txtNombre.Text = "";
+                txtTelefono.Text = "";
+                txtDireccion.Text = "";
+
+                cargarAgenda();
             }
-            catch (Exception ex)
+            else
             {
+                MessageBox.Show("Introduce todos los Datos de forma correcta", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            txtNombre.Text = "";
-            txtTelefono.Text = "";
-            txtDireccion.Text = "";
-
-            cargarAgenda();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
@@ -98,6 +106,7 @@ namespace AgendaTelefonica_BD
             }
             catch (Exception ex)
             {
+                MessageBox.Show("Error al Editar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             txtNombre.Text = "";
@@ -136,9 +145,45 @@ namespace AgendaTelefonica_BD
             }
             catch (Exception ex)
             {
+                MessageBox.Show("Error al Eliminar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             cargarAgenda();
+        }
+
+        private void txtTelefono_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (txtTelefono.TextLength < 10)
+            {
+                //Para obligar a que sólo se introduzcan números 
+                if (Char.IsDigit(e.KeyChar))
+                {
+                    e.Handled = false;
+                }
+                else
+                    if (Char.IsControl(e.KeyChar)) //permitir teclas de control como retroceso 
+                {
+                    e.Handled = false;
+                }
+                else
+                {
+                    //el resto de teclas pulsadas se desactivan 
+                    e.Handled = true;
+                }
+            }
+            else if (Char.IsControl(e.KeyChar)) //permitir teclas de control como retroceso 
+            {
+                e.Handled = false;
+            }
+            else if (Char.IsLetter(e.KeyChar) || Char.IsDigit(e.KeyChar))
+            {
+                e.KeyChar = '\0';
+            }
+            else
+            {
+                //el resto de teclas pulsadas se desactivan 
+                e.Handled = true;
+            }
         }
     }
 }
