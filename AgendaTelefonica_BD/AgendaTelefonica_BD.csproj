@@ -67,6 +67,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -82,6 +83,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\red-address-book-icon %281%29.png" />
+    <None Include="Resources\add-icon.png" />
+    <None Include="Resources\edit-icon.png" />
+    <None Include="Resources\delete-icon.png" />
+    <None Include="Resources\Save-icon.png" />
     <Content Include="ScriptSQL\AgendaTelefonica_BD.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
