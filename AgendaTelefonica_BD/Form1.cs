@@ -13,6 +13,8 @@ namespace AgendaTelefonica_BD
 {
     public partial class Form1 : Form
     {
+        int idSeleccion;
+
         public Form1()
         {
             InitializeComponent();
@@ -25,9 +27,9 @@ namespace AgendaTelefonica_BD
             try
             {
                 string Query = "SELECT * FROM agenda";
-                MySqlDataAdapter adapter = conexion.conexionUpdate(Query);
+                MySqlDataAdapter adapter = conexion.conexionGetData(Query);
                 DataTable datos = new DataTable();
-                adapter.Fill(datos);                                         
+                adapter.Fill(datos);
                 dataGridView1.DataSource = datos;
                 conexion.conexionClose();
 
@@ -48,20 +50,32 @@ namespace AgendaTelefonica_BD
 
         private void button1_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Insert(0, "1", txtNombre.Text.ToString(), txtTelefono.Text.Trim().ToString(), txtDireccion.Text.ToString());
+            ConexionMySQL conexion = new ConexionMySQL();
+            try
+            {
+                string Query = "INSERT INTO agenda(nombre,telefono,direccion) VALUES(\"" + txtNombre.Text.ToString() + "\",\"" + txtTelefono.Text.Trim().ToString() + "\",\"" + txtDireccion.Text.ToString() + "\");";
+                MySqlDataReader adapter = conexion.conexionSendData(Query);
+                while (adapter.Read())
+                {
+                }
+                conexion.conexionClose();
+            }
+            catch (Exception ex)
+            {
+            }
 
             txtNombre.Text = "";
             txtTelefono.Text = "";
             txtDireccion.Text = "";
 
-            btnEditar.Enabled = true;
-            btnEliminar.Enabled = true;
+            cargarAgenda();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
         {
             DataGridViewRow row = dataGridView1.CurrentRow;
 
+            idSeleccion = Convert.ToInt32(row.Cells[0].Value);
             txtNombre.Text = row.Cells[1].Value.ToString();
             txtTelefono.Text = row.Cells[2].Value.ToString();
             txtDireccion.Text = row.Cells[3].Value.ToString();
@@ -72,11 +86,19 @@ namespace AgendaTelefonica_BD
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            DataGridViewRow row = dataGridView1.CurrentRow;
-
-            row.Cells[1].Value = txtNombre.Text;
-            row.Cells[2].Value = txtTelefono.Text;
-            row.Cells[3].Value = txtDireccion.Text;
+            ConexionMySQL conexion = new ConexionMySQL();
+            try
+            {
+                string Query = "UPDATE agenda SET nombre=\"" + txtNombre.Text.ToString() + "\", telefono=\"" + txtTelefono.Text.Trim().ToString() + "\", direccion=\"" + txtDireccion.Text.ToString() + "\" WHERE id=" + idSeleccion + ";";
+                MySqlDataReader adapter = conexion.conexionSendData(Query);
+                while (adapter.Read())
+                {
+                }
+                conexion.conexionClose();
+            }
+            catch (Exception ex)
+            {
+            }
 
             txtNombre.Text = "";
             txtTelefono.Text = "";
@@ -84,6 +106,8 @@ namespace AgendaTelefonica_BD
 
             btnGuardar.Visible = false;
             btnCancelar.Visible = false;
+
+            cargarAgenda();
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
@@ -94,6 +118,27 @@ namespace AgendaTelefonica_BD
 
             btnGuardar.Visible = false;
             btnCancelar.Visible = false;
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow row = dataGridView1.CurrentRow;
+
+            ConexionMySQL conexion = new ConexionMySQL();
+            try
+            {
+                string Query = "DELETE FROM agenda WHERE id=" + Convert.ToInt32(row.Cells[0].Value) + ";";
+                MySqlDataReader adapter = conexion.conexionSendData(Query);
+                while (adapter.Read())
+                {
+                }
+                conexion.conexionClose();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            cargarAgenda();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace AgendaTelefonica_BD
         MySqlConnection connection = new MySqlConnection();
         string port = "3306", server = "localhost", user = "root", pass = "root", database = "agendabd";
 
-        public MySqlDataReader conexionQuery(String sqlCadena)
+        public MySqlDataReader conexionSendData(String sqlCadena)
         {
             MySqlDataReader reader = null;
             try
@@ -30,7 +30,7 @@ namespace AgendaTelefonica_BD
             return reader;
         }
 
-        public MySqlDataAdapter conexionUpdate(String sqlCadena)
+        public MySqlDataAdapter conexionGetData(String sqlCadena)
         {
             MySqlDataAdapter reader = null;
             try
